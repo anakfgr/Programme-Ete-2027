@@ -428,6 +428,10 @@ const EX = {
  pec_deck:{n:"Écarté haltères à plat",eq:"Haltères · banc plat",small:true,p:["chest"],s:["delts"],
   steps:["Allongé sur le banc plat, haltères bras tendus au-dessus de la poitrine, paumes face à face.","Coudes légèrement fléchis et fixes, ouvre les bras en arc.","Descends jusqu’à sentir l’étirement des pecs, haltères à hauteur de la poitrine.","Remonte en arc, comme pour serrer un arbre."],
   cues:["Angle des coudes figé","Charge légère : l’étirement fait le travail"],err:["Descendre trop bas avec une charge lourde (épaules)","Plier les bras pour pousser"],q:"écarté haltères banc plat technique"},
+ plank:{n:"Planche (gainage)",eq:"Tapis · lest optionnel sur le dos",bw:true,time:true,p:["abs"],s:["obliques","delts"],
+  steps:["Appui sur les avant-bras, coudes sous les épaules, pieds joints.","Serre les fessiers et rentre légèrement le ventre : le corps forme une ligne droite de la tête aux talons.","Respire calmement et tiens la position jusqu’à la fin du temps.","Note dans « Reps » le nombre de secondes tenues."],
+  cues:["Bassin ni trop haut ni trop bas","Quand tu tiens 90 s facilement, pose un disque de 2,5 à 5 kg sur le bas du dos"],
+  err:["Fesses en l’air","Dos creusé : arrête la série quand la position se dégrade"],q:"planche gainage technique"},
  cable_crunch:{n:"Crunch à la poulie haute",eq:"Poulie haute · corde",p:["abs"],s:[],
   steps:["À genoux face à la poulie, corde tenue de chaque côté de la tête.","Enroule le buste vers le bas en rapprochant les côtes du bassin.","Remonte lentement sans relâcher la tension."],
   cues:["Les hanches ne bougent pas, c’est la colonne qui s’enroule","Les abdos se chargent comme un muscle : augmente le poids"],
@@ -442,13 +446,13 @@ const SESS = {
  push:{name:"Push",sub:"Pecs · Épaules · Triceps",ex:[["incline_db_press","C"],["ohp","C"],["dips","C"],["lat_raise_db","I+"],["cable_fly","I"],["rope_pushdown","I"]]},
  pull:{name:"Pull",sub:"Dos · Biceps · Arrière d’épaule",ex:[["pullup","C"],["barbell_row","C"],["close_pulldown","C"],["face_pull","I"],["incline_curl","I"],["hammer_curl","I"]]},
  legs:{name:"Jambes & abdos",sub:"Quadriceps · Ischios · Fessiers · Abdos",ex:[["squat","C"],["rdl","C"],["bulgarian","C"],["leg_curl","I"],["calf_raise","I"],["hanging_leg_raise","A"],["ab_wheel","A"]]},
- legs_inj:{name:"Ischios, fessiers & abdos",sub:"Version cheville : aucune charge debout sur la jambe gauche",ex:[["leg_curl","C"],["hip_thrust","C"],["hanging_leg_raise","A"],["ab_wheel","A"],["cable_crunch","A"]]},
+ legs_inj:{name:"Ischios, fessiers & abdos",sub:"Version cheville : aucune charge debout sur la jambe gauche",ex:[["leg_curl","C"],["hip_thrust","C"],["hanging_leg_raise","A"],["ab_wheel","A"],["plank","A"]]},
  upA:{name:"Haut du corps A",sub:"Pecs · Dos · Épaules · Triceps",ex:[["bench","C"],["barbell_row","C"],["ohp","C"],["lat_pulldown","C"],["lat_raise_db","I+"],["rope_pushdown","I"]]},
  upB:{name:"Haut du corps B",sub:"Pecs · Dos · Épaules · Biceps",ex:[["incline_db_press","C"],["pullup","C"],["dips","C"],["db_row","C"],["cable_lat_raise","I+"],["incline_curl","I"]]},
- upC:{name:"Épaules, bras & abdos",sub:"Le V : épaules larges, bras dessinés, abdos",ex:[["seated_db_press","C"],["face_pull","I"],["ez_curl","I"],["overhead_ext","I"],["cable_crunch","A"],["woodchop","A"]]},
+ upC:{name:"Épaules, bras & abdos",sub:"Le V : épaules larges, bras dessinés, abdos",ex:[["seated_db_press","C"],["face_pull","I"],["ez_curl","I"],["overhead_ext","I"],["plank","A"],["woodchop","A"]]},
  off:{rest:true,name:"Jour sans muscu",sub:"Cardio et récupération"},
  arms:{name:"Épaules & bras",sub:"Le V : épaules larges, bras dessinés",ex:[["seated_db_press","C"],["cable_lat_raise","I+"],["reverse_fly","I"],["ez_curl","I"],["skullcrusher","I"],["overhead_ext","I"]]},
- torso:{name:"Torse & abdos",sub:"Pecs · Dos · Sangle abdominale",ex:[["bench","C"],["lat_pulldown","C"],["db_row","C"],["pec_deck","I"],["cable_crunch","A"],["woodchop","A"]]}
+ torso:{name:"Torse & abdos",sub:"Pecs · Dos · Sangle abdominale",ex:[["bench","C"],["lat_pulldown","C"],["db_row","C"],["pec_deck","I"],["plank","A"],["woodchop","A"]]}
 };
 /* Semaine type : s = séance de salle, c = cardio du jour (lundi → dimanche) */
 const FOUR_DAY_WEEKS = 4;
@@ -689,7 +693,7 @@ function latestWeight(){ const k = Object.keys(S.weights).sort(); return k.lengt
 const bwAdd = id => EX[id] && EX[id].bw ? latestWeight() : 0;
 const load = (id,s) => (s.kg||0) + bwAdd(id);
 const e1 = (id,s) => load(id,s) * (1 + (s.reps||0)/30);
-const fmtSet = (id,s) => (EX[id] && EX[id].bw ? (s.kg ? "PDC+"+fmtKg(s.kg) : "PDC") : fmtKg(s.kg||0)) + " × " + s.reps;
+const fmtSet = (id,s) => (EX[id] && EX[id].bw ? (s.kg ? "PDC+"+fmtKg(s.kg) : "PDC") : fmtKg(s.kg||0)) + " × " + s.reps + (EX[id] && EX[id].time ? " s" : "");
 const gymDates = () => Object.keys(S.workouts).filter(d => S.workouts[d].gym).sort();
 function prevSets(id, before){
   const ds = gymDates();
@@ -773,7 +777,7 @@ function coachFor(k){
   const key = (inf.key === "legs" && legs) ? "legs_inj" : inf.key, sess = SESS[key], ex = [];
   if (!sess.rest){ const seen = new Set();
     sess.ex.forEach(([id,ty]) => { const nid = swap[id] || id; if (remove.has(nid) || seen.has(nid)) return; seen.add(nid);
-      const r = rx(ty, inf.phase.id, inf.deload); if (ready === 1 && ty === "C") { r.sets = Math.max(2, r.sets-1); r.rir += 1; }
+      const r = rx(ty, inf.phase.id, inf.deload); if (EX[nid].time) r.reps = "45-90"; if (ready === 1 && ty === "C") { r.sets = Math.max(2, r.sets-1); r.rir += 1; }
       ex.push({id:nid, ty, r}); }); }
   return {inf, key, sess, ex, banners, ready, flags:{noRun, noBike, recovery:ready===2}};
 }
@@ -784,7 +788,7 @@ const START = {
  pullup:[0,""], barbell_row:[20,"de disques"], close_pulldown:[35,"à la poulie"], face_pull:[10,"à la poulie"], incline_curl:[10,"par haltère"], hammer_curl:[10,"par haltère"],
  squat:[15,"(un haltère)"], rdl:[15,"par haltère"], bulgarian:[7.5,"par haltère"], leg_curl:[25,"à la machine"], calf_raise:[10,"(un haltère)"], hanging_leg_raise:[0,""], ab_wheel:[0,""],
  seated_db_press:[10,"par haltère"], cable_lat_raise:[5,"à la poulie"], reverse_fly:[5,"par haltère"], ez_curl:[15,"à la poulie"], skullcrusher:[7.5,"par haltère"], overhead_ext:[12.5,"à la poulie"],
- bench:[20,"de disques"], lat_pulldown:[37.5,"à la poulie"], db_row:[17.5,"(un haltère)"], pec_deck:[7.5,"par haltère"], cable_crunch:[20,"à la poulie"], woodchop:[10,"à la poulie"], hip_thrust:[20,"(un haltère)"]
+ bench:[20,"de disques"], lat_pulldown:[37.5,"à la poulie"], db_row:[17.5,"(un haltère)"], pec_deck:[7.5,"par haltère"], cable_crunch:[20,"à la poulie"], plank:[0,""], woodchop:[10,"à la poulie"], hip_thrust:[20,"(un haltère)"]
 };
 const fmtLoad = (id, kg) => EX[id].bw ? (kg ? "PDC + "+fmtKg(kg)+" kg" : "Poids du corps") : fmtKg(kg)+" kg "+((START[id]||[])[1]||"");
 const r25 = v => Math.max(0, Math.round(v/2.5)*2.5);
@@ -899,7 +903,7 @@ function viewToday(){
     if (inf.deload) h += '<div class="note warn">Semaine de décharge : une série de moins, charges −20 %, aucune série à l’échec. C’est là que ton corps assimile le travail.</div>';
     if (co.banners.length) h += '<div class="note warn">Adaptée à tes douleurs. Les exercices habituellement debout (curls, élévations, face pull) peuvent se faire assis sur le banc si rester debout te gêne.</div>';
     h += '<ol class="exlist">' + list.map((x,i) => { const sg = suggestKg(x.id, x.ty, x.r.reps, prevSets(x.id, UI.sel), inf.deload);
-      return '<li><button class="exrow" data-act="ex" data-id="'+x.id+'"><span class="exnum">'+(i+1)+'</span><span class="exname">'+EX[x.id].n+'<small>'+EX[x.id].p.map(m=>MUSC[m]).join(" · ")+'</small></span><span class="exrx">'+x.r.sets+' × '+x.r.reps+(EX[x.id].side?'<small class="faint" style="font-size:12px;font-family:var(--f-body)"> /côté</small>':'')+'<span class="load">'+fmtLoad(x.id, sg.kg)+'</span></span><span class="chev">'+IC.chev+'</span></button></li>'; }).join("") + '</ol>';
+      return '<li><button class="exrow" data-act="ex" data-id="'+x.id+'"><span class="exnum">'+(i+1)+'</span><span class="exname">'+EX[x.id].n+'<small>'+EX[x.id].p.map(m=>MUSC[m]).join(" · ")+'</small></span><span class="exrx">'+x.r.sets+' × '+x.r.reps+(EX[x.id].time?' s':'')+(EX[x.id].side?'<small class="faint" style="font-size:12px;font-family:var(--f-body)"> /côté</small>':'')+'<span class="load">'+fmtLoad(x.id, sg.kg)+'</span></span><span class="chev">'+IC.chev+'</span></button></li>'; }).join("") + '</ol>';
     h += '<p class="faint" style="font-size:13px">Échauffement : 5 min de vélo, puis 2 séries légères du premier exercice.</p>';
     if (w && w.gym){
       const pr = wPRs(UI.sel);
@@ -1211,11 +1215,11 @@ function renderWO(){
   DRAFT.ex.forEach((e,i) => {
     const ex = EX[e.id], prev = prevSets(e.id, DRAFT.date);
     const toFail = (e.ty === "I" || e.ty === "I+") && inf.phase.id !== "F" && !inf.deload;
-    h += '<div class="wex"><button class="wex-name" data-act="ex" data-id="'+e.id+'">'+ex.n+'</button><div class="wex-rx">'+e.nsets+' × '+e.reps+(ex.side?' par côté':'')+' · repos '+fmtRest(e.rest)+' · '+e.rir+' rep'+(e.rir>1?'s':'')+' en réserve'+(toFail?', <b>dernière série jusqu’à l’échec</b>':'')+(ex.bw?' · kg = lest':'')+'</div>';
+    h += '<div class="wex"><button class="wex-name" data-act="ex" data-id="'+e.id+'">'+ex.n+'</button><div class="wex-rx">'+e.nsets+' × '+e.reps+(ex.time?' s':'')+(ex.side?' par côté':'')+' · repos '+fmtRest(e.rest)+' · '+e.rir+' rep'+(e.rir>1?'s':'')+' en réserve'+(toFail?', <b>dernière série jusqu’à l’échec</b>':'')+(ex.bw?' · kg = lest':'')+'</div>';
     const sug = suggestKg(e.id, e.ty, e.reps, prev, inf.deload);
     const lo = String(e.reps).split("-")[0], hi = topReps(e.reps);
     h += '<div class="hint"><b>Charge conseillée : '+fmtLoad(e.id, sug.kg)+'</b> · '+sug.why+'.'+(sug.start ? '<br>Ajuste dès la 1re série : plus de '+hi+' reps faciles, monte de 2,5 kg ; moins de '+lo+', descends.'+(e.id==="pullup"?' Si tu n’arrives pas à '+lo+' tractions, fais-en le maximum et complète avec des descentes lentes.':'') : '')+'</div>';
-    h += '<div class="sets"><div class="set hd"><span>Série</span><span>Précédent</span><span>kg</span><span>Reps</span><span>✓</span></div>';
+    h += '<div class="sets"><div class="set hd"><span>Série</span><span>Précédent</span><span>kg</span><span>'+(ex.time?'Sec':'Reps')+'</span><span>✓</span></div>';
     e.sets.forEach((s,j) => {
       const p = prev && (prev.sets[j] || prev.sets[prev.sets.length-1]);
       const kgPh = sug ? fmtKg(sug.kg) : (p ? fmtKg(p.kg) : ""), repPh = p ? String(p.reps) : String(e.reps).split("-")[0];
