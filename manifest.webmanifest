@@ -1,0 +1,16 @@
+{
+  "name": "Programme Été 2027",
+  "short_name": "Été 2027",
+  "description": "Programme muscu, course et vélo de 30 semaines jusqu'à l'été 2027.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1F3F7",
+  "theme_color": "#2B54F5",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
