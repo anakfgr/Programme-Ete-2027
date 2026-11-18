@@ -1,5 +1,5 @@
 /* Service worker : l'app fonctionne hors ligne une fois ouverte une première fois. */
-const CACHE = "ete27-v1.0.0";
+const CACHE = "ete27-v1.0.1";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -18,7 +18,7 @@ self.addEventListener("fetch", e => {
 
   // Pages : réseau d'abord (pour recevoir les mises à jour), cache si hors ligne
   if (req.mode === "navigate") {
-    e.respondWith(fetch(req).then(res => {
+    e.respondWith(fetch(req, {cache:"no-cache"}).then(res => {
       const copy = res.clone(); caches.open(CACHE).then(c => c.put("./index.html", copy)); return res;
     }).catch(() => caches.match("./index.html")));
     return;
