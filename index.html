@@ -624,8 +624,8 @@ function syncSection(){
   const cfg = sbConfig();
   let h = '<section class="card"><div class="between"><h3>Synchronisation</h3><span class="sync-badge" id="syncBadge"><i></i><span></span></span></div><p class="faint" id="syncLine" style="font-size:13px"></p>';
   if (!cfg) {
-    h += '<p style="font-size:14px">Connecte ton projet Supabase (le même que Climbing-Coach) pour retrouver tes données sur tous tes appareils. Supabase › Project Settings › API.</p>' +
-      '<label class="ckrow" for="sbUrl"><span>URL du projet</span><input class="field" id="sbUrl" placeholder="https://xxxx.supabase.co" autocomplete="off"></label>' +
+    h += '<p style="font-size:14px">L’URL de ton projet est déjà remplie. Il manque la clé publique : dans Supabase, Project Settings › API Keys › Legacy, copie la clé « anon public ».</p>' +
+      '<label class="ckrow" for="sbUrl"><span>URL du projet</span><input class="field" id="sbUrl" value="https://gmjpwsuhjsarbowlhjxg.supabase.co" autocomplete="off"></label>' +
       '<label class="ckrow" for="sbKey"><span>Clé publique (anon)</span><input class="field" id="sbKey" placeholder="eyJ…" autocomplete="off"></label>' +
       '<button class="btn pri block" data-act="sbCfg">Enregistrer la configuration</button>';
   } else if (!UI.sbUser) {
