@@ -772,11 +772,11 @@ function coachFor(k){
 const topReps = reps => { const p = String(reps).split("-").map(Number); return p[1] || p[0]; };
 /* Charges de départ estimées pour 10-12 reps avec 3 en réserve (≈ 60 kg, débutant-intermédiaire). [kg, unité] */
 const START = {
- incline_db_press:[12.5,"par haltère"], ohp:[7.5,"par haltère"], dips:[20,"de disques"], lat_raise_db:[5,"par haltère"], cable_fly:[5,"à la poulie"], rope_pushdown:[15,"à la poulie"],
- pullup:[0,""], barbell_row:[20,"de disques"], close_pulldown:[30,"à la poulie"], face_pull:[10,"à la poulie"], incline_curl:[7.5,"par haltère"], hammer_curl:[10,"par haltère"],
- squat:[15,"(un haltère)"], rdl:[15,"par haltère"], bulgarian:[7.5,"par haltère"], leg_curl:[20,"à la machine"], calf_raise:[10,"(un haltère)"], hanging_leg_raise:[0,""], ab_wheel:[0,""],
+ incline_db_press:[10,"par haltère"], ohp:[7.5,"par haltère"], dips:[20,"de disques"], lat_raise_db:[5,"par haltère"], cable_fly:[5,"à la poulie"], rope_pushdown:[15,"à la poulie"],
+ pullup:[0,""], barbell_row:[20,"de disques"], close_pulldown:[35,"à la poulie"], face_pull:[10,"à la poulie"], incline_curl:[10,"par haltère"], hammer_curl:[10,"par haltère"],
+ squat:[15,"(un haltère)"], rdl:[15,"par haltère"], bulgarian:[7.5,"par haltère"], leg_curl:[25,"à la machine"], calf_raise:[10,"(un haltère)"], hanging_leg_raise:[0,""], ab_wheel:[0,""],
  seated_db_press:[10,"par haltère"], cable_lat_raise:[5,"à la poulie"], reverse_fly:[5,"par haltère"], ez_curl:[15,"à la poulie"], skullcrusher:[7.5,"par haltère"], overhead_ext:[12.5,"à la poulie"],
- bench:[25,"de disques"], lat_pulldown:[35,"à la poulie"], db_row:[17.5,"(un haltère)"], pec_deck:[7.5,"par haltère"], cable_crunch:[20,"à la poulie"], woodchop:[10,"à la poulie"], hip_thrust:[20,"(un haltère)"]
+ bench:[20,"de disques"], lat_pulldown:[37.5,"à la poulie"], db_row:[17.5,"(un haltère)"], pec_deck:[7.5,"par haltère"], cable_crunch:[20,"à la poulie"], woodchop:[10,"à la poulie"], hip_thrust:[20,"(un haltère)"]
 };
 const fmtLoad = (id, kg) => EX[id].bw ? (kg ? "PDC + "+fmtKg(kg)+" kg" : "Poids du corps") : fmtKg(kg)+" kg "+((START[id]||[])[1]||"");
 const r25 = v => Math.max(0, Math.round(v/2.5)*2.5);
