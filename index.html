@@ -704,7 +704,7 @@ function wPRs(date){
 }
 function status(k){
   const d = pd(k), inf = info(d), t = todayKey();
-  if (inf.before || inf.after) return "none";
+  if (inf.before || inf.after || k < (S.settings.firstDay || "")) return "none";
   const w = S.workouts[k];
   if (SESS[inf.key].rest) return w && w.cardio ? "done" : (k < t ? "skip" : "rest");
   return w && w.gym ? "done" : (k < t ? "missed" : (k === t ? "today" : "planned"));
@@ -856,7 +856,7 @@ function viewToday(){
   h += '</div></header>';
   if (!tinf.before) {
     const start = pd(S.settings.start), elapsed = Math.min(diffDays(start, new Date()), WEEKS*7-1);
-    let due = 0; for (let i=0;i<=elapsed;i++){ const di = addDays(start,i); if (!SESS[info(di).key].rest && ks(di) < t) due++; }
+    let due = 0; for (let i=0;i<=elapsed;i++){ const di = addDays(start,i); if (!SESS[info(di).key].rest && ks(di) < t && ks(di) >= (S.settings.firstDay || "")) due++; }
     const doneN = gymDates().filter(x => x>=S.settings.start && x<=t).length, left = Math.max(0, WEEKS*7-1-elapsed);
     h += '<div class="planbar" role="img" aria-label="Programme accompli à '+Math.round((elapsed+1)/(WEEKS*7)*100)+' %"><i style="width:'+((elapsed+1)/(WEEKS*7)*100).toFixed(1)+'%"></i></div>' +
       '<div class="meta"><div><b>'+doneN+'</b><span>séances faites</span></div><div><b>'+(due?Math.min(100,Math.round(doneN/due*100))+' %':'–')+'</b><span>régularité</span></div><div><b>'+left+'</b><span>jours restants</span></div></div>';
@@ -870,7 +870,7 @@ function viewToday(){
 
   if (tinf.before && UI.sel <= S.settings.start) {
     const n = diffDays(new Date(), pd(S.settings.start));
-    h += '<div class="hero-goal"><span class="eyebrow">Démarrage dans '+n+' jour'+(n>1?'s':'')+'</span><h2>Lundi '+pd(S.settings.start).getDate()+' '+MOIS[pd(S.settings.start).getMonth()]+', séance 1</h2><p>30 semaines pour arriver à l’été avec un physique sec et dessiné. En attendant, tu peux parcourir les séances avec les flèches.</p><div class="row" style="margin-top:6px"><button class="btn sm pri" data-act="startnow">Démarrer cette semaine</button><button class="btn sm" style="background:rgba(127,140,170,.25);color:inherit" data-act="sel" data-d="'+S.settings.start+'">Voir la séance 1</button></div></div>';
+    h += '<div class="hero-goal"><span class="eyebrow">Démarrage dans '+n+' jour'+(n>1?'s':'')+'</span><h2>Lundi '+pd(S.settings.start).getDate()+' '+MOIS[pd(S.settings.start).getMonth()]+', séance 1</h2><p>30 semaines pour arriver à l’été avec un physique sec et dessiné. En attendant, tu peux parcourir les séances avec les flèches.</p><div class="row" style="margin-top:6px"><button class="btn sm pri" data-act="startnow">Commencer aujourd’hui</button><button class="btn sm" style="background:rgba(127,140,170,.25);color:inherit" data-act="sel" data-d="'+S.settings.start+'">Voir la séance 1</button></div></div>';
   }
   if (inf.before && UI.sel > t) { /* aperçu possible */ }
   if (inf.before && !(tinf.before && UI.sel <= S.settings.start)) h += '<div class="note">Ce jour est avant le début de ton programme.</div>';
@@ -997,7 +997,7 @@ function viewProgress(){
   const t = new Date(), tk = todayKey(), inf = info(t), start = pd(S.settings.start);
   let planned = 0, done = 0;
   if (!inf.before){ const last = Math.min(diffDays(start,t), WEEKS*7-1);
-    for (let i=0;i<=last;i++){ const d = addDays(start,i); if (!SESS[info(d).key].rest) planned++; } }
+    for (let i=0;i<=last;i++){ const d = addDays(start,i); if (!SESS[info(d).key].rest && ks(d) >= (S.settings.firstDay || "")) planned++; } }
   done = gymDates().filter(d => d>=S.settings.start && d<=tk).length;
   const mon = mondayOf(t), wgi = gymIdx(inf.before ? 1 : inf.week); let wk = 0; wgi.forEach(i => { const w = S.workouts[ks(addDays(mon,i))]; if (w && w.gym) wk++; });
   const lw = latestWeight(), tgt = targetAt(t);
@@ -1307,7 +1307,7 @@ document.addEventListener("click", ev => {
     case "quick": { const co = coachFor(d), old = S.workouts[d] || {};
       const doc = {date:d, key:co.key, title:co.sess.name, gym:true, quick:true, startedAt:Date.now(), dur:0, ex:[], cardio:!!old.cardio, note:old.note||""};
       S.workouts[d] = doc; dbWrite("w_"+d, doc); renderMain(); toast("Séance validée"); break; }
-    case "startnow": S.settings.start = ks(mondayOf(new Date())); dbWrite("settings", S.settings); UI.sel = todayKey(); renderMain(); toast("Programme démarré cette semaine"); break;
+    case "startnow": S.settings = Object.assign({}, S.settings, {start:ks(mondayOf(new Date())), firstDay:todayKey()}); dbWrite("settings", S.settings); UI.sel = todayKey(); renderMain(); toast("C’est parti : première séance aujourd’hui !"); break;
     case "ex": UI.sheet = b.dataset.id; renderSheet(); break;
     case "closeSheet": UI.sheet = null; renderSheet(); break;
     case "start": startWorkout(d); break;
